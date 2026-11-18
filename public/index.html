@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IDRMS | Real-Time Resource Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">ID</div>
+          <div>
+            <h1>IDRMS</h1>
+            <span>Adaptive Smart Grid</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a class="active" href="#overview">Overview</a>
+          <a href="#grid">Grid Pulse</a>
+          <a href="#nodes">Nodes</a>
+          <a href="#strategies">Strategy</a>
+          <a href="#bridge">Generational Bridge</a>
+          <a href="#income">Pilot offers</a>
+        </nav>
+
+        <div class="mini-card">
+          <p class="label">System mode</p>
+          <strong>Autonomous balancing</strong>
+          <div class="status-pill"><span class="dot"></span> Live</div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar" id="overview">
+          <div>
+            <p class="eyebrow">Resource intelligence layer</p>
+            <h2>Decentralized resource orchestration</h2>
+          </div>
+          <div class="timestamp" id="timestamp">--:--:--</div>
+        </header>
+
+        <section class="kpis">
+          <article class="metric-card accent-energy">
+            <div class="metric-header">
+              <span>Energy</span>
+              <span class="delta" id="energyDelta">+0.0%</span>
+            </div>
+            <h3 id="energyValue">0 kW</h3>
+            <div class="metric-bar"><span id="energyBar" style="width: 0%"></span></div>
+            <small id="energyMeta">demand vs. production</small>
+          </article>
+
+          <article class="metric-card accent-water">
+            <div class="metric-header">
+              <span>Water</span>
+              <span class="delta" id="waterDelta">+0.0%</span>
+            </div>
+            <h3 id="waterValue">0 L/min</h3>
+            <div class="metric-bar"><span id="waterBar" style="width: 0%"></span></div>
+            <small id="waterMeta">flow and storage health</small>
+          </article>
+
+          <article class="metric-card accent-food">
+            <div class="metric-header">
+              <span>Food</span>
+              <span class="delta" id="foodDelta">+0.0%</span>
+            </div>
+            <h3 id="foodValue">0 kg</h3>
+            <div class="metric-bar"><span id="foodBar" style="width: 0%"></span></div>
+            <small id="foodMeta">supply and local distribution</small>
+          </article>
+
+          <article class="metric-card accent-knowledge">
+            <div class="metric-header">
+              <span>Knowledge flow</span>
+              <span class="delta" id="knowledgeDelta">+0.0%</span>
+            </div>
+            <h3 id="knowledgeValue">0%</h3>
+            <div class="metric-bar"><span id="knowledgeBar" style="width: 0%"></span></div>
+            <small id="knowledgeMeta">ops intelligence throughput</small>
+          </article>
+        </section>
+
+        <section class="content-grid" id="grid">
+          <div class="panel chart-panel">
+            <div class="panel-header">
+              <h3>Live pulse</h3>
+              <span class="pill" id="gridHealth">96% stable</span>
+            </div>
+            <canvas id="liveChart" width="820" height="260"></canvas>
+          </div>
+
+          <div class="panel info-panel">
+            <div class="panel-header">
+              <h3>System state</h3>
+              <span class="pill warning" id="alertCount">2 alerts</span>
+            </div>
+            <ul class="event-list" id="eventList"></ul>
+          </div>
+        </section>
+
+        <section class="bottom-grid" id="nodes">
+          <div class="panel map-panel">
+            <div class="panel-header">
+              <h3>Node network</h3>
+            </div>
+            <div id="nodeGrid" class="node-grid"></div>
+          </div>
+
+          <div class="panel strategy-panel" id="strategies">
+            <div class="panel-header">
+              <h3>Real-time loop</h3>
+            </div>
+            <div class="loop-steps">
+              <div><span>01</span><strong>Sense</strong><small>IoT streams</small></div>
+              <div><span>02</span><strong>Process</strong><small>Edge AI predicts</small></div>
+              <div><span>03</span><strong>Decouple</strong><small>Smart contracts log</small></div>
+              <div><span>04</span><strong>Act</strong><small>Actuators reroute</small></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bottom-grid auth-grid">
+          <div class="panel auth-panel">
+            <div class="panel-header">
+              <h3>Access control</h3>
+              <span class="pill" id="authStatus">Not signed in</span>
+            </div>
+
+            <form id="authForm" class="auth-form">
+              <input id="fullName" type="text" placeholder="Full name (optional)" />
+              <input id="username" type="text" placeholder="Username" required />
+              <input id="password" type="password" placeholder="Password" required />
+
+              <div class="auth-actions">
+                <button type="submit" id="submitAuth" class="primary-btn">Login</button>
+                <button type="button" id="toggleRegister" class="secondary-btn">Register</button>
+                <button type="button" id="logoutBtn" class="ghost-btn">Logout</button>
+              </div>
+            </form>
+            <div id="authMessage" class="auth-message"></div>
+          </div>
+
+          <div class="panel trade-panel">
+            <div class="panel-header">
+              <h3>Peer-to-peer exchange</h3>
+            </div>
+
+            <form id="tradeForm" class="trade-form">
+              <label>
+                Resource
+                <select id="tradeResource">
+                  <option value="energy">Energy</option>
+                  <option value="water">Water</option>
+                  <option value="food">Food</option>
+                  <option value="knowledge">Knowledge</option>
+                </select>
+              </label>
+
+              <label>
+                Quantity
+                <input id="tradeQuantity" type="number" min="1" value="25" required />
+              </label>
+
+              <label>
+                Price per unit
+                <input id="tradePrice" type="number" min="1" value="12" required />
+              </label>
+
+              <button type="submit" class="primary-btn">Execute trade</button>
+            </form>
+            <div id="tradeMessage" class="auth-message"></div>
+          </div>
+        </section>
+
+        <section class="bridge-section" id="bridge">
+          <div class="section-heading">
+            <p class="eyebrow">People first, infrastructure second</p>
+            <h2>Generational Bridge</h2>
+          </div>
+
+          <div class="bridge-grid">
+            <section class="panel bridge-panel">
+              <div class="panel-header">
+                <h3>Choose an interface</h3>
+                <label class="interface-picker">View
+                  <select id="interfaceMode" aria-label="Choose interface mode">
+                    <option value="home">Home ambient</option>
+                    <option value="work">Work alerts</option>
+                    <option value="youth">Youth quests</option>
+                  </select>
+                </label>
+              </div>
+              <div class="ambient-status" id="ambientStatus" data-state="balanced" aria-live="polite">
+                <span class="ambient-light" aria-hidden="true"></span>
+                <div><strong id="ambientTitle">Community balanced</strong><p id="ambientMessage">Waiting for the live resource signal.</p></div>
+              </div>
+              <div class="bridge-actions">
+                <button type="button" class="secondary-btn" id="speakStatus">Speak status</button>
+                <button type="button" class="secondary-btn" id="enableAlerts">Enable important alerts</button>
+              </div>
+              <div class="youth-quest" id="youthQuest">
+                <div><span class="future-tag food">Daily community quest</span><h4 id="questTitle">Shift one flexible task into a surplus window</h4><p id="questProgress">Earn 10 community points when generation is above demand.</p></div>
+                <button type="button" class="primary-btn" id="claimQuest" disabled>Complete quest</button>
+                <strong><span id="communityPoints">0</span> points</strong>
+              </div>
+            </section>
+
+            <section class="panel bridge-panel">
+              <div class="panel-header"><h3>Footstep energy</h3><span class="simulated-badge">SIMULATED SENSOR</span></div>
+              <div class="kinetic-reading"><strong id="footfallRate">--</strong><span>steps / min</span></div>
+              <p class="bridge-copy">Estimated output <strong id="kineticPower">-- kW</strong> now · <strong id="dailyKinetic">-- kWh</strong> per day at this activity level. Hardware output depends on tile design and installation.</p>
+              <div class="knowledge-divider"></div>
+              <div class="panel-header"><h3>Local knowledge shelf</h3><span id="knowledgeCount">0 entries</span></div>
+              <form id="knowledgeForm" class="knowledge-form">
+                <label>Title<input id="knowledgeTitle" maxlength="100" required /></label>
+                <label>Category<input id="knowledgeCategory" maxlength="40" placeholder="Growing, repair, story" required /></label>
+                <label class="knowledge-content">Knowledge<textarea id="knowledgeContent" maxlength="4000" rows="3" required></textarea></label>
+                <button type="submit" class="primary-btn">Add to local shelf</button>
+              </form>
+              <div id="knowledgeMessage" class="auth-message" aria-live="polite"></div>
+              <ul id="knowledgeList" class="knowledge-list" aria-live="polite"></ul>
+            </section>
+          </div>
+          <p class="bridge-note">Local prototype: footfall values are simulated; voice uses your browser; alerts are browser notifications. WhatsApp, physical ambient lights, piezoelectric tiles, and replicated offline storage require connected services or hardware.</p>
+        </section>
+
+        <section class="future-layers-grid" id="strategies">
+          <div class="panel future-panel">
+            <div class="panel-header">
+              <h3>Future infrastructure layers</h3>
+            </div>
+
+            <div class="future-card-grid">
+              <div class="future-card">
+                <span class="future-tag energy">AI agents</span>
+                <h4>Autonomous resource negotiation</h4>
+                <p>Household AI agents buy and sell surplus energy, water, and food automatically based on occupancy and usage patterns.</p>
+              </div>
+
+              <div class="future-card">
+                <span class="future-tag water">Predictive maintenance</span>
+                <h4>Digital twin health monitoring</h4>
+                <p>Acoustic and vibration sensors identify micro-anomalies before they become outages, allowing repairs during low-demand windows.</p>
+              </div>
+
+              <div class="future-card">
+                <span class="future-tag food">Biophilic nodes</span>
+                <h4>Local abundance loops</h4>
+                <p>Hydroponic walls and automated greenhouses convert graywater and solar excess into resilient neighborhood food supply.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel simulator-panel">
+            <div class="panel-header">
+              <h3>Real-time grid simulator</h3>
+            </div>
+
+            <form id="simulatorForm" class="simulator-form">
+              <label>
+                Weather condition
+                <select id="weatherMode">
+                  <option value="clear">Clear</option>
+                  <option value="cloudy">Cloudy</option>
+                  <option value="storm">Storm</option>
+                  <option value="heatwave">Heatwave</option>
+                </select>
+              </label>
+
+              <label>
+                Community demand multiplier
+                <input id="demandMultiplier" type="range" min="0.7" max="1.6" step="0.1" value="1.1" />
+                <span id="demandValue">1.1x</span>
+              </label>
+
+              <label>
+                AI autonomy level
+                <input id="aiAutonomy" type="range" min="50" max="100" step="1" value="84" />
+                <span id="aiValue">84%</span>
+              </label>
+
+              <button type="submit" class="primary-btn">Apply scenario</button>
+            </form>
+            <div id="simulatorMessage" class="auth-message"></div>
+          </div>
+        </section>
+
+        <section class="income-section" id="income">
+          <div class="section-heading">
+            <p class="eyebrow">A practical path from prototype to paid pilot</p>
+            <h2>Community services</h2>
+          </div>
+          <div class="income-grid">
+            <article class="income-card">
+              <span class="future-tag energy">Recurring service</span>
+              <h3>Monitoring & reporting</h3>
+              <p>Meter setup, resource dashboards, monthly reports, and operational support for one building or community site.</p>
+              <strong>Setup fee + monthly service</strong>
+            </article>
+            <article class="income-card">
+              <span class="future-tag water">Partner channel</span>
+              <h3>Installer operations</h3>
+              <p>Work with approved solar, battery, EV, and sensor installers to provide the customer-facing monitoring layer.</p>
+              <strong>Project or ongoing operations fee</strong>
+            </article>
+            <article class="income-card">
+              <span class="future-tag food">Measured outcome</span>
+              <h3>Savings analysis</h3>
+              <p>Compare real meter data against an agreed baseline. Any performance fee requires verified savings and a written agreement.</p>
+              <strong>Fixed analysis fee or agreed share</strong>
+            </article>
+            <article class="income-card">
+              <span class="future-tag energy">Education</span>
+              <h3>School & community license</h3>
+              <p>Offer energy-literacy quests and a locally managed knowledge shelf to schools and community organizations.</p>
+              <strong>Annual site license</strong>
+            </article>
+          </div>
+
+          <div class="income-workflow">
+            <div class="income-copy">
+              <h3>Propose a pilot</h3>
+              <p>Start with one site and one measurable goal. Pilot requests are stored in this local prototype; they are not emailed and no payment is collected.</p>
+              <p class="bridge-note">Current readings are simulated. Do not promise measured savings until approved meters are connected and a baseline is agreed.</p>
+            </div>
+            <form id="pilotForm" class="pilot-form">
+              <label>Organization<input id="pilotOrganization" maxlength="100" required /></label>
+              <label>Contact name<input id="pilotContact" maxlength="80" required /></label>
+              <label>Email<input id="pilotEmail" type="email" maxlength="254" required /></label>
+              <label>Site type
+                <select id="pilotPropertyType" required>
+                  <option value="">Choose a site</option>
+                  <option value="apartment">Apartment building</option>
+                  <option value="school">School</option>
+                  <option value="farm">Farm</option>
+                  <option value="small-business">Small business</option>
+                  <option value="community-group">Community group</option>
+                </select>
+              </label>
+              <label>Service to explore
+                <select id="pilotService" required>
+                  <option value="monitoring">Monitoring & reporting</option>
+                  <option value="installer-partnership">Installer partnership</option>
+                  <option value="savings-analysis">Savings analysis</option>
+                  <option value="education-license">Education license</option>
+                </select>
+              </label>
+              <label class="pilot-details">Pilot goal<textarea id="pilotDetails" maxlength="1000" rows="3" placeholder="For example: measure peak electricity demand for one building." required></textarea></label>
+              <label class="consent-row"><input id="pilotConsent" type="checkbox" required /> I agree that these contact details and pilot notes will be stored in this local prototype.</label>
+              <button type="submit" class="primary-btn">Save pilot request</button>
+              <div id="pilotMessage" class="auth-message" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <section id="pilotAdmin" class="panel pilot-admin" hidden>
+            <div class="panel-header"><h3>Pilot inquiry inbox</h3><button type="button" class="secondary-btn" id="refreshPilotInbox">Refresh</button></div>
+            <ul id="pilotInboxList" class="pilot-inbox-list"></ul>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
